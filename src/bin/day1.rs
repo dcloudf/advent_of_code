@@ -52,8 +52,8 @@ struct DigitFindingResult {
 }
 
 fn look_for_digits(line: &str) -> (DigitFindingResult, DigitFindingResult) {
-    let first_position = line.find(|x: char| x.is_digit(10)).unwrap();
-    let last_position = line.rfind(|x: char| x.is_digit(10)).unwrap();
+    let first_position = line.find(|x: char| x.is_ascii_digit()).unwrap();
+    let last_position = line.rfind(|x: char| x.is_ascii_digit()).unwrap();
     (
         DigitFindingResult {
             value: line

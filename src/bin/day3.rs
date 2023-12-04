@@ -18,17 +18,17 @@ struct Number {
 
 fn parse_engine_schematic(filename: &str) -> (Vec<Number>, Vec<Point>) {
     let file_text = read_to_string(filename).unwrap();
-    let mut enum_lines = file_text.lines().enumerate();
+    let enum_lines = file_text.lines().enumerate();
     let mut numbers = Vec::new();
     let mut symbol_positions = Vec::new();
-    while let Some(enum_line) = enum_lines.next() {
+    for enum_line in enum_lines {
         let mut enum_chars = enum_line.1.chars().enumerate();
         while let Some(char) = enum_chars.next() {
             if char.1.is_ascii_digit() {
                 let mut digits = String::from(char.1);
                 let start = char.0;
                 let mut end = char.0;
-                while let Some(ch) = enum_chars.next() {
+                for ch in enum_chars.by_ref() {
                     if ch.1 == '.' {
                         break;
                     } else if !ch.1.is_ascii_digit() {

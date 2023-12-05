@@ -62,9 +62,9 @@ fn parse_engine_schematic(filename: &str) -> (Vec<Number>, Vec<Symbol>) {
     (numbers, symbols)
 }
 
-fn filter_numbers(numbers: &Vec<Number>, symbols: &Vec<Symbol>) -> Vec<u32> {
+fn filter_numbers(numbers: &[Number], symbols: &[Symbol]) -> Vec<u32> {
     numbers
-        .into_iter()
+        .iter()
         .filter(|num| {
             symbols.iter().any(|s| {
                 (num.start - 1 <= s.position.0 && s.position.0 <= num.end + 1)

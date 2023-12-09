@@ -11,20 +11,20 @@ fn main() {
 
 #[derive(Eq, PartialEq, PartialOrd, Ord, Hash, Debug)]
 enum CardValue {
-    JOKER = 1,
-    TWO = 2,
-    THREE = 3,
-    FOUR = 4,
-    FIVE = 5,
-    SIX = 6,
-    SEVEN = 7,
-    EIGHT = 8,
-    NINE = 9,
-    TEN = 10,
-    JACK = 11,
-    QUEEN = 12,
-    KING = 13,
-    ACE = 14,
+    Joker = 1,
+    Two = 2,
+    Three = 3,
+    Four = 4,
+    Five = 5,
+    Six = 6,
+    Seven = 7,
+    Eight = 8,
+    Nine = 9,
+    Ten = 10,
+    Jack = 11,
+    Queen = 12,
+    King = 13,
+    Ace = 14,
 }
 
 #[derive(Eq, PartialEq, PartialOrd, Ord, Debug)]
@@ -55,22 +55,22 @@ impl CardHand {
         let hand: Vec<CardValue> = card_literals
             .chars()
             .map(|char| match char {
-                'A' => CardValue::ACE,
-                'K' => CardValue::KING,
-                'Q' => CardValue::QUEEN,
+                'A' => CardValue::Ace,
+                'K' => CardValue::King,
+                'Q' => CardValue::Queen,
                 'J' => match use_joker {
-                    true => CardValue::JOKER,
-                    false => CardValue::JACK,
+                    true => CardValue::Joker,
+                    false => CardValue::Jack,
                 },
-                'T' => CardValue::TEN,
-                '9' => CardValue::NINE,
-                '8' => CardValue::EIGHT,
-                '7' => CardValue::SEVEN,
-                '6' => CardValue::SIX,
-                '5' => CardValue::FIVE,
-                '4' => CardValue::FOUR,
-                '3' => CardValue::THREE,
-                '2' => CardValue::TWO,
+                'T' => CardValue::Ten,
+                '9' => CardValue::Nine,
+                '8' => CardValue::Eight,
+                '7' => CardValue::Seven,
+                '6' => CardValue::Six,
+                '5' => CardValue::Five,
+                '4' => CardValue::Four,
+                '3' => CardValue::Three,
+                '2' => CardValue::Two,
                 _ => panic!("Incorrect char"),
             })
             .collect();
@@ -112,7 +112,7 @@ fn match_counter_to_combination(counter: &HashMap<&CardValue, i32>) -> Combinati
 
 fn calc_combination(cards: &[CardValue]) -> CombinationValue {
     let mut counter = HashMap::new();
-    for card in cards.into_iter() {
+    for card in cards.iter() {
         counter.entry(card).and_modify(|x| *x += 1).or_insert(1);
     }
     match_counter_to_combination(&counter)
@@ -120,29 +120,27 @@ fn calc_combination(cards: &[CardValue]) -> CombinationValue {
 
 fn calc_combination_with_joker(cards: &[CardValue]) -> CombinationValue {
     let mut counter = HashMap::new();
-    for card in cards.into_iter() {
+    for card in cards.iter() {
         counter.entry(card).and_modify(|x| *x += 1).or_insert(1);
     }
-    if counter.get(&CardValue::JOKER) == None || counter.get(&CardValue::JOKER) == Some(&5) {
+    if counter.get(&CardValue::Joker).is_none() || counter.get(&CardValue::Joker) == Some(&5) {
         return match_counter_to_combination(&counter);
     }
-    let joker_value = counter[&CardValue::JOKER];
+    let joker_value = counter[&CardValue::Joker];
     let max_value = counter
         .iter()
-        .filter(|(&x, _y)| x != &CardValue::JOKER)
+        .filter(|(&x, _y)| x != &CardValue::Joker)
         .map(|(_x, y)| y)
         .max()
         .unwrap();
     let max_key = counter
-        .iter()
-        .filter(|(&x, y)| x != &CardValue::JOKER && y == &max_value)
-        .next()
+        .iter().find(|(&x, y)| x != &CardValue::Joker && y == &max_value)
         .unwrap()
         .0;
     counter
-        .entry(&max_key)
+        .entry(max_key)
         .and_modify(|x| *x += joker_value.to_owned());
-    counter.entry(&CardValue::JOKER).and_modify(|x| *x = 0);
+    counter.entry(&CardValue::Joker).and_modify(|x| *x = 0);
     match_counter_to_combination(&counter)
 }
 
@@ -173,22 +171,22 @@ mod tests {
     fn test_ord_card_hand() {
         let first_hand = CardHand {
             hand: vec![
-                CardValue::THREE,
-                CardValue::THREE,
-                CardValue::THREE,
-                CardValue::THREE,
-                CardValue::TWO,
+                CardValue::Three,
+                CardValue::Three,
+                CardValue::Three,
+                CardValue::Three,
+                CardValue::Two,
             ],
             combination: CombinationValue::FourOfKind,
             bid: 1,
         };
         let second_hand = CardHand {
             hand: vec![
-                CardValue::TWO,
-                CardValue::ACE,
-                CardValue::ACE,
-                CardValue::ACE,
-                CardValue::ACE,
+                CardValue::Two,
+                CardValue::Ace,
+                CardValue::Ace,
+                CardValue::Ace,
+                CardValue::Ace,
             ],
             combination: CombinationValue::FourOfKind,
             bid: 2,
@@ -197,11 +195,11 @@ mod tests {
 
         let third_hand = CardHand {
             hand: vec![
-                CardValue::THREE,
-                CardValue::THREE,
-                CardValue::THREE,
-                CardValue::THREE,
-                CardValue::TWO,
+                CardValue::Three,
+                CardValue::Three,
+                CardValue::Three,
+                CardValue::Three,
+                CardValue::Two,
             ],
             combination: CombinationValue::FourOfKind,
             bid: 3,

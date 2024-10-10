@@ -1,0 +1,12 @@
+[package]
+name = "day14"
+version = "0.1.0"
+edition = "2021"
+
+[dev-dependencies]
+divan.workspace = true
+
+[[bench]]
+name = "day14_part1"
+path = "benches/bench_part1.rs"
+harness = false

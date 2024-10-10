@@ -1,11 +1,4 @@
-use std::fs::read_to_string;
-
-fn main() {
-    let input = read_to_string("data/day14.txt").unwrap();
-    println!("{}", calc_total_load(input))
-}
-
-fn calc_total_load(input: String) -> i32 {
+pub fn calc_total_load(input: String) -> i32 {
     let mut load = 0;
     let mut lines = input.lines().rev();
     let mut rounded_rocks: Vec<i32> = lines

@@ -72,6 +72,30 @@ impl Row {
     }
 }
 
+enum PlatformFacingState {
+    North,
+    East,
+    South,
+    West,
+}
+
+pub struct Platform {
+    rows: Vec<Row>,
+    state: PlatformFacingState,
+}
+
+impl Platform {
+    fn attempt_spin_cycle(&self) {}
+
+    fn tilt_in_right(&self, direction: char) {}
+
+    fn rotate_right(&self) {}
+
+    fn calc_load_on_side_beams(&self, side: char) -> i32 {
+        return 42;
+    }
+}
+
 pub fn calc_total_load(input: String) -> i32 {
     let mut load = 0;
     let mut lines = input.lines().rev();

@@ -99,12 +99,13 @@ impl Row {
     }
 }
 
+#[derive(PartialEq)]
 enum PlatformFacingState {
-    North = 1,
-    East = 4,
-    South = 3,
-    West = 2,
     None = 0,
+    North = 1,
+    West = 2,
+    South = 3,
+    East = 4,
 }
 
 impl From<char> for PlatformFacingState {
@@ -144,8 +145,22 @@ impl From<Platform> for String {
 }
 
 impl Platform {
-    fn attempt_spin_cycle(&self) {
-        todo!()
+    fn attempt_spin_cycle(&mut self) {
+        if self.state == PlatformFacingState::None {
+            self.tilt_north();
+        }
+        for state in vec![
+            PlatformFacingState::West,
+            PlatformFacingState::South,
+            PlatformFacingState::East,
+            PlatformFacingState::North,
+        ]
+        .into_iter()
+        {
+            self.rotate_clockwise();
+            self.tilt_in_right();
+            self.state = state;
+        }
     }
 
     fn tilt_in_right(&mut self) {
@@ -165,6 +180,7 @@ impl Platform {
     pub fn tilt_north(&mut self) {
         self.rotate_clockwise();
         self.tilt_in_right();
+        self.state = PlatformFacingState::North;
     }
 
     pub fn calc_load(&self) -> i32 {
@@ -176,6 +192,30 @@ pub fn part1(path: &str) -> i32 {
     let input = read_to_string(path).unwrap();
     let mut platform = Platform::from_iter(input.lines().map(|line| Row::from(line.to_string())));
     platform.tilt_north();
+    platform.calc_load()
+}
+
+pub fn part2(path: &str) -> i32 {
+    let input = read_to_string(path).unwrap();
+    let mut platform = Platform::from_iter(input.lines().map(|line| Row::from(line.to_string())));
+    let mut load_keeper = platform.calc_load();
+    let mut iteration_keeper = 1;
+    for iteration in 0..1000000000 {
+        platform.attempt_spin_cycle();
+        let load = platform.calc_load();
+        if load != load_keeper {
+            load_keeper = load;
+            iteration_keeper = 1;
+        } else {
+            iteration_keeper += 1
+        }
+        if iteration_keeper >= 10 {
+            return platform.calc_load();
+        }
+        if iteration % 10 == 0 {
+            println!("{} iterations passed", iteration)
+        }
+    }
     platform.calc_load()
 }
 

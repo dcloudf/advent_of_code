@@ -1,6 +1,5 @@
-use day14::part1::calc_total_load;
+use day14::part1::part1;
 
 fn main() {
-    let input = include_str!("../input_data.txt").to_string();
-    println!("{}", calc_total_load(input));
+    println!("{}", part1("../input_data.txt"));
 }
